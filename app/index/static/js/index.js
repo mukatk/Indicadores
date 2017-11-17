@@ -1,12 +1,20 @@
 var form = new Vue({
     el: '.div-indicadores',
     data: {
-        indicadores: [],
-        total: 0
+        indicadores: []
+    },
+    computed: {
+        total: function () {
+            var somatorio = 0;
+            for (var i = 0; i < indicadores.length; i++) {
+                somatorio += parseFloat(parseInt(indicadores[i].Porcentagem) * parseFloat(indicadores[i].Peso));
+            }
+            return somatorio;
+        }
     },
     mounted: function () {
         this.buscaIndicadores();
-        setInterval(this.buscaIndicadores, 60000);
+        setInterval(this.buscaIndicadores, 180000);
     },
     methods: {
         buscaIndicadores: function () {
@@ -18,9 +26,7 @@ var form = new Vue({
                 var somatoria = 0;
                 for (var i = 0; i < data.length; i++) {
                     _self.indicadores.push(data[i]);
-                    somatoria += parseFloat(parseInt(data[i].Porcentagem) * parseFloat(data[i].Peso));
                 }
-                _self.total = somatoria;
             });
         },
         classeProgresso: function(porcentagem) {
