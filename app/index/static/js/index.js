@@ -6,7 +6,7 @@ var form = new Vue({
     },
     mounted: function () {
         this.buscaIndicadores();
-        setInterval(this.buscaIndicadores, 5000);
+        setInterval(this.buscaIndicadores, 60000);
     },
     methods: {
         buscaIndicadores: function () {
