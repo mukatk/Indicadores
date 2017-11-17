@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, jsonify
-from .model import Indicador
+from flask import Blueprint, render_template, jsonify, request
+from .model import Indicador, db_indicador
 import csv
 import os
 
@@ -17,9 +17,16 @@ def index():
 
 @root_page.route('/BuscaIndicadores')
 def buscaIndicadores():
-    indicadores = []
-    with open(os.path.abspath('indicadores.csv'), 'rt') as csvfile:
-        reader = csv.DictReader(csvfile, delimiter='\t')
-        for row in reader:
-            indicadores.append(Indicador(row["Nome"], row["Porcentagem"], row["Peso"]))
+    db = db_indicador()
+    indicadores = db.busca_indicadores()
     return jsonify(result=[e.serialize() for e in indicadores])
+
+@root_page.route('/AtualizaIndicador', methods=["POST"])
+def atualizaIndicador():
+    try:
+        jsonObj = request.get_json()
+        db = db_indicador()
+        db.atualiza_indicador(int(jsonObj["Id"]), int(jsonObj["Porcentagem"]))
+        return 'Registro atualizado com sucesso'
+    except:
+        return 'Erro ao atualizar'

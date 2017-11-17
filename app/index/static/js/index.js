@@ -5,28 +5,40 @@ var form = new Vue({
     },
     computed: {
         total: function () {
+            const _self = this;
             var somatorio = 0;
-            for (var i = 0; i < indicadores.length; i++) {
-                somatorio += parseFloat(parseInt(indicadores[i].Porcentagem) * parseFloat(indicadores[i].Peso));
+            for (var i = 0; i < _self.indicadores.length; i++) {
+                somatorio += parseFloat(parseInt(_self.indicadores[i].Porcentagem) * parseFloat(_self.indicadores[i].Peso));
             }
             return somatorio;
         }
     },
     mounted: function () {
-        this.buscaIndicadores();
-        setInterval(this.buscaIndicadores, 180000);
+        const _self = this;
+        _self.buscaIndicadores();
+        setInterval(_self.buscaIndicadores, 180000);
     },
     methods: {
+        atualizaIndicador: function (id, porcentagem) {
+            const _self = this;
+
+            _self.$http.post('/AtualizaIndicador', {
+                Id: id,
+                Porcentagem: porcentagem
+            }).then(response => {
+                Materialize.toast(response.body, 4000);
+            });
+        },
         buscaIndicadores: function () {
             const _self = this;
 
             _self.$http.get('/BuscaIndicadores').then(response => {
                 var data = response.body.result;
                 _self.indicadores = [];
-                var somatoria = 0;
                 for (var i = 0; i < data.length; i++) {
                     _self.indicadores.push(data[i]);
                 }
+                Materialize.toast('Atualização concluída', 4000);
             });
         },
         classeProgresso: function(porcentagem) {
