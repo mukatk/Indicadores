@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}Bem-vindo{% endblock %}
+{% block head %}
+  {{ super() }}
+
+  <link href="{{ url_for('.static', filename='css/index.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+<div class="row div-indicadores">
+    <div v-for="indicador in indicadores" class="col s12">
+        <span>{{ "{{ indicador.Nome }}" }}</span>
+        <div class="progress grey lighten-3">
+            <div class="determinate" v-bind:class="classeProgresso(indicador.Porcentagem)" v-bind:style="{width: indicador.Porcentagem + '%' }"></div>
+        </div>
+    </div>
+    <div class="col s12">
+        <h4>Progresso Geral</h4>
+        <div class="progress grey lighten-3">
+            <div class="determinate" v-bind:class="classeProgressoGeral()" v-bind:style="{width: total + '%' }"></div>
+        </div>
+    </div>    
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+
+<script type="text/javascript" src="{{ url_for('.static', filename='js/index.js') }}"></script>
+{% endblock %}
